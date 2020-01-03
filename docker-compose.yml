@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+
+  traefik:
+    image: traefik
+    container_name: traefik
+    command: "--providers.docker=true"
+    restart: always # starts even on system restart, after docker daemon start
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:delegated
+    networks:
+      - default
+      - www-proxy
+
+networks:
+  www-proxy:
+    external:
+      name: docker-www

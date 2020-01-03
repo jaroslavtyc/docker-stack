@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+
+  portainer:
+    image: portainer/portainer:latest
+    container_name: portainer
+    ports:
+      - 9001:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.docker/data:/data:delegated
+    labels:
+      - "traefik.backend=portainer"
+      - "traefik.frontend.rule=HostRegexp:portainer.loc"
+
+  # haproxy:
+  #   image: haproxy:1.5.19-alpine
+  #   volumes:
+  #     - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+
+
+  traefik:
+    image: traefik
+    container_name: traefik
+    command: "--api --docker --docker.domain=loc --logLevel=DEBUG"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:delegated
+    networks:
+      - default
+      - www-proxy
+
+networks:
+  www-proxy:
+    external:
+      name: docker-www
