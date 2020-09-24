@@ -5,17 +5,18 @@ services:
   traefik:
     image: traefik:v1.7
     container_name: traefik
-    command: "--providers.docker=true --log.level=DEBUG"
-    restart: always # starts even on system restart, after docker daemon start
+    command: "--api --docker --logLevel=DEBUG"
+    restart: "always" # starts even on system restart, after docker daemon start
     ports:
-      - "80:80"
+      - "8080:8080"
+      - "8088:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - default
-      - www-proxy
+      - proxy
 
 networks:
-  www-proxy:
+  proxy:
     external:
       name: docker-www
