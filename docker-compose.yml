@@ -6,7 +6,6 @@ services:
     image: traefik:v1.7
     container_name: traefik
     command: "--api --docker --logLevel=DEBUG"
-    restart: "always" # starts even on system restart, after docker daemon start
     ports:
       - "8080:8080"
       - "8088:80"
